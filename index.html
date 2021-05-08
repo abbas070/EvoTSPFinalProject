@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Evo-TSP</title>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="description" content="Evolving solutions to a TSP instance" />
+    <meta name="author" content="Elmurad Abbasov" />
+
+    <link
+      rel="stylesheet"
+      href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css"
+      integrity="sha512-xodZBNTC5n17Xt2atTPuE1HxjVMSvLVW9ocqUKLsCC5CXdbqCmblAshOMAS6/keqq/sMZMZ19scR4PsZChSR7A=="
+      crossorigin=""
+    />
+    <!-- Make sure you put this AFTER Leaflet's CSS -->
+    <script
+      src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"
+      integrity="sha512-XQoYMqMTK8LvdxXYG3nZ448hOEQiglfqkJs1NOQV44cWnUrBc8PkAOcXy20w0vlaXaVUearIOBhiXZ5V3ynxwA=="
+      crossorigin=""
+    ></script>
+  </head>
+
+  <body>
+    <h1>Evo-TSP</h1>
+    <div>
+      <h2>"Global" parameters</h2>
+
+      <label for="runId-text-field">Run ID:</label>
+      <input type="text" id="runId-text-field" />
+
+      <label for="population-size-text-field">Population size:</label>
+      <input type="text" id="population-size-text-field" />
+
+      <label for="num-parents">Number of parents to keep:</label>
+      <input type="text" id="num-parents" />
+    </div>
+
+    <div id="map" style="height: 500px; width: 500px"></div>
+    <div id="best-run-routes">
+      <h2>Best so far</h2>
+      <ul>
+        <li>Best <code>routeId</code>: <span id="best-routeId"></span></li>
+        <li>Best length: <span id="best-length"></span></li>
+        <li>
+          Best path: <span id="best-path"></span>
+          <ol id="best-route-cities"></ol>
+        </li>
+        <li>
+          Current threshold: <span id="current-threshold"></span>
+        </li>
+      </ul>
+    </div>
+
+    <div class="run-evolution">
+      <h2>Evolve solutions!</h2>
+
+      <label for="num-generations">How many generations to run?</label>
+      <input type="text" id="num-generations" />
+
+      <button id="run-evolution">Run evolution</button>
+    </div>
+
+    <div class="current-generation">
+      <h2>Current generation: <span id="current-generation"></span></h2>
+      <div id="new-routes">
+        <ol id="new-route-list"></ol>
+      </div>
+    </div>
+
+    <div class="get-best-routes">
+      <h2>Best routes from previous generation</h2>
+      <div id="best-routes">
+        <ol id="best-route-list"></ol>
+      </div>
+    </div>
+
+    <script src="vendor/jquery-3.6.0.min.js"></script>
+    <script src="vendor/async.mic.js"></script>
+    <script src="evotsp.js"></script>
+    <script>
+      var mymap = L.map("map").setView([46.7296, -94.6859], 6); //automate or import view for future
+
+      L.tileLayer(
+        "https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}",
+        {
+          attribution:
+            'Map data &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
+          maxZoom: 18,
+          id: "mapbox/streets-v11",
+          tileSize: 512,
+          zoomOffset: -1,
+          accessToken:
+            "pk.eyJ1IjoiZWxtdXJhZCIsImEiOiJja25manUzdjkycDk4MnZwaGV4MTNlcnNqIn0.D-BJUxqoFbc-bP_Us5oVww",
+        }
+      ).addTo(mymap);
+    </script>
+  </body>
+</html>
