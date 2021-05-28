@@ -65,14 +65,9 @@ Continuation:
 
 ## API details:
 
-<IMG id="myImage" src="img/api.PNG" >
+<IMG id="myImage" src="img/api.PNG"  >
 
-<style type="text/css">
-    #myImage {
-        display: block;
-        margin-left: auto;
-        margin-right: auto }
-</style>
+
 
 ### **/best**
 
