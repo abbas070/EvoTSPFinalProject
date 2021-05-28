@@ -58,13 +58,15 @@ illustration, please refer to the videos below.
 ![Alt Text](https://media.giphy.com/media/7DXkUpjx1ehSVx00M6/giphy.gif)
 
 Continuation:
+
 ![Alt Text](https://media.giphy.com/media/dQfASsna48eAGLYN6N/giphy.gif)
 
 <h1 id="technicaldetails">Technical details:</h1>
 
 ## API details:
 
-<IMG id="myImage" src="img/api.png" >
+<IMG id="myImage" src="img/api.PNG" >
+
 <style type="text/css">
     #myImage {
         display: block;
