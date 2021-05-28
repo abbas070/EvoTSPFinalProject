@@ -65,9 +65,7 @@ Continuation:
 
 ## API details:
 
-<IMG id="myImage" src="img/api.PNG"  >
-
-
+<IMG id="myImage" src="img/api.PNG">
 
 ### **/best**
 
@@ -96,12 +94,7 @@ will return a route ID
 ## Lambdas:
 
 <IMG id="myImage" src="img/awslambda.png" >
-<style type="text/css">
-    #myImage {
-        display: block;
-        margin-left: auto;
-        margin-right: auto }
-</style>
+
 
 There were used five AWS Lambdas for this project:
 
@@ -141,12 +134,7 @@ necessary to illustrate routes on the map.
 <h1 id="iamroles">IAM roles: </h1>
 
 <IMG id="myImage" src="img/awsiam.png" >
-<style type="text/css">
-    #myImage {
-        display: block;
-        margin-left: auto;
-        margin-right: auto }
-</style>
+
 
 With IAM roles, we are able to give permission for AWS to access our lambda functions.
 For this project, we have used EvoTSPLambda role 2 write and 2 read permissions
