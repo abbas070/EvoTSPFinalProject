@@ -178,7 +178,7 @@ running.
 
 <h3 id="getBestRoutes()">- getBestRoutes() </h3>
 
-```
+<script>
 const AWS = require('aws-sdk');
 const ddb = new AWS.DynamoDB.DocumentClient();
 exports.handler = (event, context, callback) => {
@@ -228,7 +228,7 @@ function errorResponse(errorMessage, awsRequestId, callback) {
     },
   });
 }
-```
+</script>
 
 
 
