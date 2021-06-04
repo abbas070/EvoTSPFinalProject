@@ -178,6 +178,25 @@ running.
 
 <h3 id="getBestRoutes()">- getBestRoutes() </h3>
 
+
+<link href="scripts/highlightjs/styles/github-gist.css" rel="stylesheet" />
+<script src="scripts/highlightjs/highlight.pack.js"></script>
+
+<!--<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.11.0/styles/default.min.css">-->
+<!--<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.11.0/highlight.min.js"></script>-->
+
+<script>
+function highlightCode() {
+    var pres = document.querySelectorAll("pre>code");
+    for (var i = 0; i < pres.length; i++) {
+        hljs.highlightBlock(pres[i]);
+    }
+}
+highlightCode();
+</script>
+
+</body>
+</html>
 <script>
 const AWS = require('aws-sdk');
 const ddb = new AWS.DynamoDB.DocumentClient();
