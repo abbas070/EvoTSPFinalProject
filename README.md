@@ -21,11 +21,21 @@
         - [distance_data](#distancedata)
         - [routes](#routes)
 - [Leaflet](#leaflet)
-- [Appendix](#Appendix)
+- [Appendix](#appendix)
+    - [Lambda functions](#lambdas)
+        - [getBestRoutes()](#getbestroutes())
+        - [getRoutesById()](#getroutesbyid())
+        - [randomRoutes()](#randomroutes())
+        - [mutateRoutes()](#mutateroutes())
+        - [getCityData()](#getcitydata())
+    - [Application components:](#application)
+        - [Javascript](#javascript)
+        - [HTML](#html)
+
 
 <h1 id="purpose">Overview: Purpose </h1>
 
-In general, the Travelling Salesman Problem, or TSP, asks to find the shortest possible route that visits n number of cities exactly once and returns to the starting point. The
+In general, the `Travelling Salesman Problem`, or TSP, asks to find the shortest possible route that visits n number of cities exactly once and returns to the starting point. The
 purpose of the problem is to find the shortest possible route to minimize the distance traveled. It is a classic optimization problem within the field of operational research, but which also has many possible implications in computer science.
 
 The following application is meant to solve Travelling Salesman Problem using
@@ -67,27 +77,27 @@ Continuation:
 
 <IMG id="myImage" src="img/api.PNG">
 
-### **/best**
+### **`/best`**
 
 Best resource contains the GET method, is connected to getBestRoutes() lambda
 function, and will return the number of shortest routes.
 
-### **/city-data**
+### **`/city-data`**
 
 City-data resource also takes the GET request and is connected to the getCityData()
 lambda function. This delivers city data for the preferred location, which in our case is
 the state of Minnesota.
 
-### **/mutateroute**
+### **`/mutateroute`**
 
 Mutateroute resource contains the POST method and connects us to the main part of
 the application, the mutateRoutes() lambda.
 
-### **/routes**
+### **`/routes`**
 Routes resource includes the GET method and establishes a connection between our
 API Gateway and the randomRoutes() lambda function.
 
-### **/{routeId}**
+### **`/{routeId}`**
 RouteId is a sub-resource that goes under /routes resource, has a GET method, and
 will return a route ID
 
@@ -98,24 +108,24 @@ will return a route ID
 
 There were used five AWS Lambdas for this project:
 
-### **getBestRoutes()**
+### **`getBestRoutes()`**
 
 Takes GET method and outputs the number of shortest routes. In general, it generate K
 best values using a query with “#” marker to create the partition key for the query.
 
-### **getRoutesById**
+### **`getRoutesById`**
 
 This lambda takes the requested routeId path and matches it with routeId from “routes”
 DynamoDB table. It also returns other information relevant to the database, including
 distance, route, and ID.
 
-### **randomRoutes()**
+### **`randomRoutes()`**
 
 The purpose of randomRoutes() lambda is to generate random routes that are taken
 from the “distance_table” DynamoDB table (Minnesota JSON) and calculate the
 distance of those routes.
 
-### **mutateRoutes()**
+### **`mutateRoutes()`**
 
 This lambda is the main part of the project and consists of many functions, which as a
 result generate new child routes by mutating existing parent routes. It takes a parent
@@ -125,7 +135,7 @@ the city-distance data, receive details of the route with the given routeId, rec
 database, and return children. The shortest route will be at the beginning of an array
 because they are sorted by length.
 
-### **getCityData()**
+### **`getCityData()`**
 
 getCityData() responds to GET requests and returns the cities component of the
 city-distance data object from the “Minnesota” region. The outputs will be
@@ -142,13 +152,13 @@ within access of DynamoDB tables and indexes.
 
 <h1 id="tables">DynamnoDB Table Structures: </h1>
 
-### **distance_data**
+### **`distance_data`**
 
 This table includes the region(String) as a partition key (no secondary index or sorting)
 that holds the state name, cities that hold information on city objects such as
 coordinates, and distances that hold information about length between cities.
 
-### **routes**
+### **`routes`**
 
 Routes table include the routeId(String) as a partition key, with an index that has
 runGen(String) as a secondary index, and len(Number) as sorting. Because routeId is
@@ -157,7 +167,69 @@ database, and thus we are using length to get the best routes with the shortest 
 
 <h1 id="leaflet">Leaflet </h1>
 
-Leaflet is a JavaScript library for interactive maps that allows us to illustrate our desired
+`Leaflet` is a JavaScript library for interactive maps that allows us to illustrate our desired
 maps. For this project, we have used mapBox as a tile provider, and the purpose of
 leaflet was to illustrate performing and final routes on the map while computations are
 running.
+
+<h1 id="appendix">Appendix </h1>
+
+<h2 id="lambdas">Lambda functions: </h2>
+
+<h3 id="getBestRoutes()">- getBestRoutes() </h3>
+
+```
+const AWS = require('aws-sdk');
+const ddb = new AWS.DynamoDB.DocumentClient();
+exports.handler = (event, context, callback) => {
+  const queryStringParameters = event.queryStringParameters;
+  const runId = queryStringParameters.runId;
+  const generation = queryStringParameters.generation;
+  const numToReturn = queryStringParameters.numToReturn;
+  getBestRoutes(runId, generation, numToReturn)
+    .then(dbResults => {
+      const bestRoutes = dbResults.Items;
+      console.log(bestRoutes);
+      callback(null, {
+        statusCode: 201,
+        body: JSON.stringify(bestRoutes),
+        headers: {
+          'Access-Control-Allow-Origin': '*'
+        }
+      });
+    })
+    .catch(err => {
+      console.error(err);
+      errorResponse(err.message, context.awsRequestId, callback);
+    });
+};
+function getBestRoutes(runId, generation, numToReturn) {
+  const runGen = runId + "#" + generation;
+  return ddb.query({
+    TableName: 'routes',
+    IndexName: 'index',
+    ProjectionExpression: "routeId, len",
+    KeyConditionExpression: "runGen = :runGen",
+    ExpressionAttributeValues: {
+      ":runGen": runGen,
+    },
+    Limit: numToReturn
+  }).promise();
+}
+function errorResponse(errorMessage, awsRequestId, callback) {
+  callback(null, {
+    statusCode: 500,
+    body: JSON.stringify({
+      Error: errorMessage,
+      Reference: awsRequestId,
+    }),
+    headers: {
+      'Access-Control-Allow-Origin': '*',
+    },
+  });
+}
+```
+
+
+
+
