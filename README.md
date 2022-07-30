@@ -150,7 +150,7 @@ With IAM roles, we are able to give permission for AWS to access our lambda func
 For this project, we have used EvoTSPLambda role 2 write and 2 read permissions
 within access of DynamoDB tables and indexes.
 
-<h1 id="tables">DynamnoDB Table Structures: </h1>
+<h1 id="tables">DynamoDB Table Structures: </h1>
 
 ### **`distance_data`**
 
